@@ -161,7 +161,7 @@ Developed by Inflexion Points Technology Partners (IPTP).
 """)
 
 # Option to drop all files or upload individually
-file_upload_option = st.sidebar.radio("File Upload Option", ("Upload Individually", "Drop All Files"))
+file_upload_option = st.sidebar.radio("File Upload Option", ("Drop All Files","Upload Individually"))
 if file_upload_option == "Upload Individually":
     st.info(
         """
