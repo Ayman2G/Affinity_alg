@@ -246,11 +246,6 @@ with col2:
             )
         st.session_state.template_downloaded = True
 
-    if st.button('View Original Excel Template'):
-        if not st.session_state.template_downloaded:
-            download_and_open_template()
-        else:
-            webbrowser.open('templates/Roadshow_template.xlsx')
 
 # Show progress bar only for generating the Excel file
 if export_file and notes_file and persons_file:
