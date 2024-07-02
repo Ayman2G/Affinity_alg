@@ -72,8 +72,8 @@ def determine_file_type(file):
     else:
         return None
 
-# Streamlit app
-st.set_page_config(page_title="Roadshow Data Populator", page_icon=":dart:", layout="centered", initial_sidebar_state="expanded")
+# Change to set the page icon
+st.set_page_config(page_title="Roadshow Data Populator", page_icon="images/IPTP.png", layout="centered", initial_sidebar_state="expanded")
 
 # Custom CSS for styling
 st.markdown("""
@@ -237,19 +237,18 @@ with col2:
         st.session_state.template_downloaded = False
 
     def download_and_open_template():
+        with open('templates/Roadshow_template.xlsx', 'rb') as f:
+            st.download_button(
+                label='Download Template',
+                data=f,
+                file_name='Roadshow_template.xlsx',
+                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
         st.session_state.template_downloaded = True
-        webbrowser.open('templates/Roadshow_template.xlsx')
 
     if st.button('View Original Excel Template'):
         if not st.session_state.template_downloaded:
-            with open('templates/Roadshow_template.xlsx', 'rb') as f:
-                st.download_button(
-                    label='Download Template',
-                    data=f,
-                    file_name='Roadshow_template.xlsx',
-                    mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                )
-            st.session_state.template_downloaded = True
+            download_and_open_template()
         else:
             webbrowser.open('templates/Roadshow_template.xlsx')
 
@@ -300,7 +299,7 @@ if export_file and notes_file and persons_file:
     col1, col2 = st.columns(2)
     with col1:
         st.download_button(
-            label="View Generated Excel File",
+            label="Download Generated Excel File",
             data=output,
             file_name=f'Generated_Roadshow_{dossier_name}.xlsx',
             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
