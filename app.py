@@ -155,10 +155,25 @@ with col3:
     st.image("images/Affinity.svg", width=200)
 
 st.sidebar.title("About")
-st.sidebar.info("""
-This app allows you to upload Project Tracker CSV files and populates an Excel template with the data.
-Developed by Inflexion Points Technology Partners (IPTP).
-""")
+st.sidebar.markdown("""
+    <style>
+        .custom-text {
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            color: #4CAF50;
+        }
+        .custom-text strong {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+    <div class="custom-text">
+        This app allows you to upload Project Tracker CSV files and populates an Excel template with the data.
+        <br><br>
+        Developed by <strong>Inflexion Points Technology Partners (IPTP)</strong>.
+    </div>
+""", unsafe_allow_html=True)
+
 
 # Option to drop all files or upload individually
 file_upload_option = st.sidebar.radio("File Upload Option", ("Drop All Files", "Upload Individually"))
