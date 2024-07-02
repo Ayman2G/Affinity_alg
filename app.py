@@ -155,6 +155,9 @@ with col3:
     st.image("images/Affinity.svg", width=200)
 
 st.sidebar.title("About")
+st.sidebar.info("""
+This app allows you to upload Project Tracker CSV files and populates an Excel template with the data.
+""")
 st.sidebar.markdown("""
     <style>
         .custom-text {
@@ -173,7 +176,6 @@ st.sidebar.markdown("""
         Developed by <strong>Inflexion Points Technology Partners (IPTP)</strong>.
     </div>
 """, unsafe_allow_html=True)
-
 
 # Option to drop all files or upload individually
 file_upload_option = st.sidebar.radio("File Upload Option", ("Drop All Files", "Upload Individually"))
