@@ -160,11 +160,11 @@ st.sidebar.markdown("""
         .custom-text {
             font-family: 'Arial', sans-serif;
             font-size: 16px;
-            color: #4CAF50;
+            color: black;
         }
         .custom-text strong {
             font-weight: bold;
-            color: #4CAF50;
+            color: #392883;
         }
     </style>
     <div class="custom-text">
