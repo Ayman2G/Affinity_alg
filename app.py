@@ -329,9 +329,9 @@ st.sidebar.markdown("""
         }
         .github-link {
             text-align: center;
-            margin-top: 200px;
+            margin-top: 100px;
             position: absolute;
-            bottom: 500px;
+            bottom: 200px;
             width: 100%;
         }
         .github-link a {
