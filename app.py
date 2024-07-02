@@ -316,6 +316,7 @@ if export_file and notes_file and persons_file:
         updated_df = pd.read_excel(output, sheet_name='Suivi du Roadshow', header=20)
         updated_df = updated_df[['Wave', "Acquirer's Name", 'Status', 'Intro call', 'Tech call', 'NDA signed', 'Surname / Name contact 1', 'Position contact 1', 'Contact shooté 1', 'LinkedIn contact 1', 'Surname / Name contact 2', 'Position contact 2', 'Contact shooté 2', 'LinkedIn contact 2', 'Surname / Name contact 3', 'Position contact 3', 'Contact shooté 3', 'LinkedIn contact 3', 'Comments / Rationale (if passed)', 'Date of comments']]
         st.dataframe(updated_df)
+        
 st.sidebar.markdown("""
     <style>
         .custom-text {
@@ -331,26 +332,22 @@ st.sidebar.markdown("""
             text-align: center;
             margin-top: 100px;
             position: absolute;
-            bottom: -200px;
+            bottom: -250px;
             width: 100%;
         }
         .github-link a {
-            text-decoration: none;
-            color: #000000;
+            text-decoration: underline;
+            color: #0000EE;
         }
         .github-link img {
             width: 20px;
             height: 20px;
             vertical-align: middle;
         }
-        .github-username {
-            color: #0000EE;
-            text-decoration: underline;
-        }
     </style>
 
     <div class="github-link">
         <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub"> 
-        Developed by <a href="https://github.com/Ayman2G" target="_blank" class="github-username">@Ayman2G</a>
+        Developed by <a href="https://github.com/Ayman2G" target="_blank">@Ayman2G</a>
     </div>
 """, unsafe_allow_html=True)
