@@ -347,7 +347,7 @@ st.sidebar.markdown("""
     </style>
 
     <div class="github-link">
-        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub"> 
+        <img src="https://logos-download.com/wp-content/uploads/2016/09/GitHub_logo.png" alt="GitHub"> 
         Developed by <a href="https://github.com/Ayman2G" target="_blank">@Ayman2G</a>
     </div>
 """, unsafe_allow_html=True)
