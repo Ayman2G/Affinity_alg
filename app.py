@@ -233,8 +233,26 @@ with col1:
         template_path = 'templates/Roadshow_template.xlsx'
 
 with col2:
-    st.button('View Original Excel Template', on_click=lambda: webbrowser.open('templates/Roadshow_template.xlsx'))
+    if st.button('Download Original Excel Template'):
+        with open('templates/Roadshow_template.xlsx', 'rb') as f:
+            st.download_button(
+                label='Download Template',
+                data=f,
+                file_name='Roadshow_template.xlsx',
+                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
 
+    if 'template_downloaded' not in st.session_state:
+        st.session_state.template_downloaded = False
+
+    def download_and_open_template():
+        st.session_state.template_downloaded = True
+        webbrowser.open('templates/Roadshow_template.xlsx')
+
+    if not st.session_state.template_downloaded:
+        st.button('View Original Excel Template', on_click=download_and_open_template)
+    else:
+        webbrowser.open('templates/Roadshow_template.xlsx')
 if export_file and notes_file and persons_file:
     # Read CSV files
     export_df = pd.read_csv(export_file)
