@@ -331,7 +331,7 @@ st.sidebar.markdown("""
             text-align: center;
             margin-top: 20px;
             position: absolute;
-            bottom: 0;
+            bottom: 20px;
             width: 100%;
         }
         .github-link a {
@@ -350,9 +350,7 @@ st.sidebar.markdown("""
     </style>
 
     <div class="github-link">
-        <a href="https://github.com/Ayman2G" target="_blank">
-            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub"> 
-            <span class="github-username">Developed by @Ayman2G</span>
-        </a>
+        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub"> 
+        Developed by <a href="https://github.com/Ayman2G" target="_blank" class="github-username">@Ayman2G</a>
     </div>
 """, unsafe_allow_html=True)
