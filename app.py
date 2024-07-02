@@ -157,6 +157,9 @@ with col3:
 st.sidebar.title("About")
 st.sidebar.info("""
 This app allows you to upload Project Tracker CSV files and populates an Excel template with the data.
+
+There is an option to drop all csv files at once instead of uploading them separately
+
 """)
 
 # Option to drop all files or upload individually
@@ -332,7 +335,7 @@ st.sidebar.markdown("""
             text-align: center;
             margin-top: 100px;
             position: absolute;
-            bottom: -320px;
+            bottom: -350px;
             width: 100%;
         }
         .github-link a {
