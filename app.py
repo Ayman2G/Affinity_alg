@@ -171,8 +171,6 @@ st.sidebar.markdown("""
         }
     </style>
     <div class="custom-text">
-        This app allows you to upload Project Tracker CSV files and populates an Excel template with the data.
-        <br><br>
         Developed by <strong>Inflexion Points Technology Partners (IPTP)</strong>.
     </div>
 """, unsafe_allow_html=True)
