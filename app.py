@@ -161,7 +161,7 @@ Developed by Inflexion Points Technology Partners (IPTP).
 """)
 
 # Option to drop all files or upload individually
-file_upload_option = st.sidebar.radio("File Upload Option", ("Drop All Files","Upload Individually"))
+file_upload_option = st.sidebar.radio("File Upload Option", ("Drop All Files", "Upload Individually"))
 if file_upload_option == "Upload Individually":
     st.info(
         """
@@ -233,10 +233,14 @@ with col1:
         template_path = 'templates/Roadshow_template.xlsx'
 
 with col2:
-    def download_and_open_template():
-        if 'template_downloaded' not in st.session_state:
-            st.session_state.template_downloaded = False
+    if 'template_downloaded' not in st.session_state:
+        st.session_state.template_downloaded = False
 
+    def download_and_open_template():
+        st.session_state.template_downloaded = True
+        webbrowser.open('templates/Roadshow_template.xlsx')
+
+    if st.button('View Original Excel Template'):
         if not st.session_state.template_downloaded:
             with open('templates/Roadshow_template.xlsx', 'rb') as f:
                 st.download_button(
@@ -249,38 +253,7 @@ with col2:
         else:
             webbrowser.open('templates/Roadshow_template.xlsx')
 
-    st.button('View Original Excel Template', on_click=download_and_open_template)
 if export_file and notes_file and persons_file:
-    # Read CSV files
-    export_df = pd.read_csv(export_file)
-    notes_df = pd.read_csv(notes_file)
-    persons_df = pd.read_csv(persons_file)
-
-    # Load the template Excel file
-    wb = load_workbook(template_path)
-    ws = wb['Suivi du Roadshow']  # Assuming the sheet to be filled is named 'Suivi du Roadshow'
-
-    # Get the dossier name from the export CSV
-    dossier_name = export_df.iloc[0]['Name'].split(' - ')[0]
-    ws['A1'] = f"{dossier_name} - Roadshow"
-
-    # Add the current month and year below the title
-    current_date = datetime.now()
-    month_year = current_date.strftime('%B %Y')
-    ws['A2'] = month_year
-
-    # Show progress bar
-    progress_bar = st.progress(0)
-    progress_text = st.empty()
-    for i in range(100):
-        time.sleep(0.01)
-        progress_bar.progress(i + 1)
-        progress_text.text(f"Generating Excel file: {i + 1}%")
-
-    # Populate the Excel file
-    populate_excel(ws, export_df, notes_df, persons_df)
-
-    if export_file and notes_file and persons_file:
     # Read CSV files
     export_df = pd.read_csv(export_file)
     notes_df = pd.read_csv(notes_file)
@@ -323,11 +296,22 @@ if export_file and notes_file and persons_file:
     updated_df = updated_df[['Wave', "Acquirer's Name", 'Status', 'Intro call', 'Tech call', 'NDA signed', 'Surname / Name contact 1', 'Position contact 1', 'Contact shooté 1', 'LinkedIn contact 1', 'Surname / Name contact 2', 'Position contact 2', 'Contact shooté 2', 'LinkedIn contact 2', 'Surname / Name contact 3', 'Position contact 3', 'Contact shooté 3', 'LinkedIn contact 3', 'Comments / Rationale (if passed)', 'Date of comments']]
     st.dataframe(updated_df)
 
-    # Provide a button to download the generated file directly
-    st.download_button(
-        label='Download Generated Excel File',
-        data=output,
-        file_name=f'Generated_Roadshow_{dossier_name}.xlsx',
-        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    )
+    # Display buttons for viewing and downloading the generated file
+    col1, col2 = st.columns(2)
+    with col1:
+        st.download_button(
+            label="View Generated Excel File",
+            data=output,
+            file_name=f'Generated_Roadshow_{dossier_name}.xlsx',
+            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
 
+    st.image("images/arrow_small_new.gif")
+
+    # If permission error, display the dataframe as a fallback option
+    if st.session_state.get('permission_error', False):
+        st.error("Permission denied: Unable to save or access the file. Please ensure the file is not open in another program and try again.")
+        st.info("You can view the generated file below:")
+        updated_df = pd.read_excel(output, sheet_name='Suivi du Roadshow', header=20)
+        updated_df = updated_df[['Wave', "Acquirer's Name", 'Status', 'Intro call', 'Tech call', 'NDA signed', 'Surname / Name contact 1', 'Position contact 1', 'Contact shooté 1', 'LinkedIn contact 1', 'Surname / Name contact 2', 'Position contact 2', 'Contact shooté 2', 'LinkedIn contact 2', 'Surname / Name contact 3', 'Position contact 3', 'Contact shooté 3', 'LinkedIn contact 3', 'Comments / Rationale (if passed)', 'Date of comments']]
+        st.dataframe(updated_df)
