@@ -331,7 +331,7 @@ st.sidebar.markdown("""
             text-align: center;
             margin-top: 200px;
             position: absolute;
-            bottom: 20px;
+            bottom: 1000px;
             width: 100%;
         }
         .github-link a {
