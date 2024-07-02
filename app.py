@@ -154,29 +154,27 @@ with col2:
 with col3:
     st.image("images/Affinity.svg", width=200)
 
-st.sidebar.title("About")
-st.sidebar.info("""
-This app allows you to upload Project Tracker CSV files and populates an Excel template with the data.
-""")
-
 st.sidebar.markdown("""
     <style>
         .custom-text {
             font-family: 'Arial', sans-serif;
             font-size: 16px;
-            color: #4CAF50;
+            color: #000000;
         }
         .custom-text strong {
             font-weight: bold;
-            color: #4CAF50;
+            color: #000000;
         }
         .github-link {
             text-align: center;
             margin-top: 20px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
         }
         .github-link a {
             text-decoration: none;
-            color: #4CAF50;
+            color: #000000;
         }
         .github-link img {
             width: 20px;
@@ -185,12 +183,13 @@ st.sidebar.markdown("""
         }
     </style>
     <div class="custom-text">
-
-        Developed by <strong>Inflexion Points Technology Partners (IPTP)</strong>.
+        This app allows you to upload Project Tracker CSV files and populates an Excel template with the data.
+        <br><br>
+        Developed inside <strong>IPTP</strong> (the company).
     </div>
     <div class="github-link">
         <a href="https://github.com/Ayman2G" target="_blank">
-            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub"> Developed by
+            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub"> Developed by @Ayman2G
         </a>
     </div>
 """, unsafe_allow_html=True)
