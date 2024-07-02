@@ -33,7 +33,7 @@ def populate_excel(ws, export_df, notes_df, persons_df):
         acquirer_name = row['Name'].split(' - ')[1]
         ws.cell(row=start_row + index, column=1, value=row['Wave/Tier'])  # Wave
         ws.cell(row=start_row + index, column=2, value=acquirer_name)  # Acquirer's Name
-        ws.cell(row=start_row + index, column4, value=row['Buyer Status'])  # Status
+        ws.cell(row=start_row + index, column=4, value=row['Buyer Status'])  # Status
         ws.cell(row=start_row + index, column=5, value=row['Introduction Call'])  # Introduction Call
         ws.cell(row=start_row + index, column=6, value=row['Management Presentation'])  # Management Presentation
         ws.cell(row=start_row + index, column=7, value=row['NDA Signed'])  # NDA Signed
