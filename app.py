@@ -158,22 +158,43 @@ st.sidebar.title("About")
 st.sidebar.info("""
 This app allows you to upload Project Tracker CSV files and populates an Excel template with the data.
 """)
+
 st.sidebar.markdown("""
     <style>
         .custom-text {
             font-family: 'Arial', sans-serif;
             font-size: 16px;
-            color: black;
+            color: #4CAF50;
         }
         .custom-text strong {
             font-weight: bold;
-            color: #392883;
+            color: #4CAF50;
+        }
+        .github-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .github-link a {
+            text-decoration: none;
+            color: #4CAF50;
+        }
+        .github-link img {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
         }
     </style>
     <div class="custom-text">
+
         Developed by <strong>Inflexion Points Technology Partners (IPTP)</strong>.
     </div>
+    <div class="github-link">
+        <a href="https://github.com/Ayman2G" target="_blank">
+            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub"> Developed by
+        </a>
+    </div>
 """, unsafe_allow_html=True)
+
 
 # Option to drop all files or upload individually
 file_upload_option = st.sidebar.radio("File Upload Option", ("Drop All Files", "Upload Individually"))
