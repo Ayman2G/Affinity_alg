@@ -33,7 +33,7 @@ def populate_excel(ws, export_df, notes_df, persons_df):
         acquirer_name = row['Name'].split(' - ')[1]
         ws.cell(row=start_row + index, column=1, value=row['Wave/Tier'])  # Wave
         ws.cell(row=start_row + index, column=2, value=acquirer_name)  # Acquirer's Name
-        ws.cell(row=start_row + index, column=4, value=row['Buyer Status'])  # Status
+        ws.cell(row=start_row + index, column4, value=row['Buyer Status'])  # Status
         ws.cell(row=start_row + index, column=5, value=row['Introduction Call'])  # Introduction Call
         ws.cell(row=start_row + index, column=6, value=row['Management Presentation'])  # Management Presentation
         ws.cell(row=start_row + index, column=7, value=row['NDA Signed'])  # NDA Signed
@@ -44,10 +44,10 @@ def populate_excel(ws, export_df, notes_df, persons_df):
             person_data = persons_df[persons_df['Emails'].str.contains(email)]
             if not person_data.empty:
                 person = person_data.iloc[0]
-                ws.cell(row=start_row + index, column=9 + i*4, value=person['Full Name'])  # Surname / name contact
-                ws.cell(row=start_row + index, column=10 + i*4, value=person['Job Titles'])  # Position
-                ws.cell(row=start_row + index, column=11 + i*4, value=person['Emails'])  # Email
-                ws.cell(row=start_row + index, column=12 + i*4, value=person['LinkedIn Url'])  # LinkedIn Url
+                ws.cell(row=start_row + index, column=9 + i * 4, value=person['Full Name'])  # Surname / name contact
+                ws.cell(row=start_row + index, column=10 + i * 4, value=person['Job Titles'])  # Position
+                ws.cell(row=start_row + index, column=11 + i * 4, value=person['Emails'])  # Email
+                ws.cell(row=start_row + index, column=12 + i * 4, value=person['LinkedIn Url'])  # LinkedIn Url
 
     # Add data from notes_df
     for index, row in notes_df.iterrows():
@@ -72,7 +72,7 @@ def determine_file_type(file):
     else:
         return None
 
-# Change to set the page icon
+# Streamlit app
 st.set_page_config(page_title="Roadshow Data Populator", page_icon="images/IPTP.png", layout="centered", initial_sidebar_state="expanded")
 
 # Custom CSS for styling
@@ -252,6 +252,7 @@ with col2:
         else:
             webbrowser.open('templates/Roadshow_template.xlsx')
 
+# Show progress bar only for generating the Excel file
 if export_file and notes_file and persons_file:
     # Read CSV files
     export_df = pd.read_csv(export_file)
@@ -272,12 +273,16 @@ if export_file and notes_file and persons_file:
     ws['A2'] = month_year
 
     # Show progress bar
-    progress_bar = st.progress(0)
-    progress_text = st.empty()
-    for i in range(100):
-        time.sleep(0.01)
-        progress_bar.progress(i + 1)
-        progress_text.text(f"Generating Excel file: {i + 1}%")
+    if 'progress_bar_visible' not in st.session_state:
+        st.session_state.progress_bar_visible = True
+
+    if st.session_state.progress_bar_visible:
+        progress_bar = st.progress(0)
+        progress_text = st.empty()
+        for i in range(100):
+            time.sleep(0.01)
+            progress_bar.progress(i + 1)
+            progress_text.text(f"Generating Excel file: {i + 1}%")
 
     # Populate the Excel file
     populate_excel(ws, export_df, notes_df, persons_df)
