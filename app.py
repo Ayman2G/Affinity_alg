@@ -233,27 +233,54 @@ with col1:
         template_path = 'templates/Roadshow_template.xlsx'
 
 with col2:
-    if st.button('Download Original Excel Template'):
-        with open('templates/Roadshow_template.xlsx', 'rb') as f:
-            st.download_button(
-                label='Download Template',
-                data=f,
-                file_name='Roadshow_template.xlsx',
-                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            )
-
-    if 'template_downloaded' not in st.session_state:
-        st.session_state.template_downloaded = False
-
     def download_and_open_template():
-        st.session_state.template_downloaded = True
-        webbrowser.open('templates/Roadshow_template.xlsx')
+        if 'template_downloaded' not in st.session_state:
+            st.session_state.template_downloaded = False
 
-    if not st.session_state.template_downloaded:
-        st.button('View Original Excel Template', on_click=download_and_open_template)
-    else:
-        webbrowser.open('templates/Roadshow_template.xlsx')
+        if not st.session_state.template_downloaded:
+            with open('templates/Roadshow_template.xlsx', 'rb') as f:
+                st.download_button(
+                    label='Download Template',
+                    data=f,
+                    file_name='Roadshow_template.xlsx',
+                    mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                )
+            st.session_state.template_downloaded = True
+        else:
+            webbrowser.open('templates/Roadshow_template.xlsx')
+
+    st.button('View Original Excel Template', on_click=download_and_open_template)
 if export_file and notes_file and persons_file:
+    # Read CSV files
+    export_df = pd.read_csv(export_file)
+    notes_df = pd.read_csv(notes_file)
+    persons_df = pd.read_csv(persons_file)
+
+    # Load the template Excel file
+    wb = load_workbook(template_path)
+    ws = wb['Suivi du Roadshow']  # Assuming the sheet to be filled is named 'Suivi du Roadshow'
+
+    # Get the dossier name from the export CSV
+    dossier_name = export_df.iloc[0]['Name'].split(' - ')[0]
+    ws['A1'] = f"{dossier_name} - Roadshow"
+
+    # Add the current month and year below the title
+    current_date = datetime.now()
+    month_year = current_date.strftime('%B %Y')
+    ws['A2'] = month_year
+
+    # Show progress bar
+    progress_bar = st.progress(0)
+    progress_text = st.empty()
+    for i in range(100):
+        time.sleep(0.01)
+        progress_bar.progress(i + 1)
+        progress_text.text(f"Generating Excel file: {i + 1}%")
+
+    # Populate the Excel file
+    populate_excel(ws, export_df, notes_df, persons_df)
+
+    if export_file and notes_file and persons_file:
     # Read CSV files
     export_df = pd.read_csv(export_file)
     notes_df = pd.read_csv(notes_file)
@@ -296,41 +323,11 @@ if export_file and notes_file and persons_file:
     updated_df = updated_df[['Wave', "Acquirer's Name", 'Status', 'Intro call', 'Tech call', 'NDA signed', 'Surname / Name contact 1', 'Position contact 1', 'Contact shooté 1', 'LinkedIn contact 1', 'Surname / Name contact 2', 'Position contact 2', 'Contact shooté 2', 'LinkedIn contact 2', 'Surname / Name contact 3', 'Position contact 3', 'Contact shooté 3', 'LinkedIn contact 3', 'Comments / Rationale (if passed)', 'Date of comments']]
     st.dataframe(updated_df)
 
-    # Save the generated file to a specified directory
-    output_dir = 'output'
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    output_path = os.path.join(output_dir, f'Generated_Roadshow_{dossier_name}_{timestamp}.xlsx')
+    # Provide a button to download the generated file directly
+    st.download_button(
+        label='Download Generated Excel File',
+        data=output,
+        file_name=f'Generated_Roadshow_{dossier_name}.xlsx',
+        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
 
-    # Try to save the file only if it has not been saved yet
-    if not st.session_state.get('file_saved', False):
-        try:
-            # Save the workbook directly
-            wb.save(output_path)
-            st.session_state['file_saved'] = True
-            st.session_state['output_path'] = output_path
-            st.info(f"The updated Excel file has been saved to {output_path}")
-
-        except PermissionError:
-            # Provide an error message without trying to save again
-            st.error("Permission denied: Unable to save or access the file. Please ensure the file is not open in another program and try again.")
-            st.info("You can view the generated file below:")
-    else:
-        output_path = st.session_state.get('output_path', output_path)
-        st.info(f"Using previously saved file at {output_path}")
-
-    # Display buttons for viewing and downloading the generated file
-    col1, col2 = st.columns(2)
-    with col1:
-        st.button('View Generated Excel File', on_click=lambda: webbrowser.open(f'file://{output_path}'))
-
-    st.image("Gifs/arrow_small_new.gif")
-
-    # If permission error, display the dataframe as a fallback option
-    if st.session_state.get('permission_error', False):
-        st.error("Permission denied: Unable to save or access the file. Please ensure the file is not open in another program and try again.")
-        st.info("You can view the generated file below:")
-        updated_df = pd.read_excel(output_path, sheet_name='Suivi du Roadshow', header=20)
-        updated_df = updated_df[['Wave', "Acquirer's Name", 'Status', 'Intro call', 'Tech call', 'NDA signed', 'Surname / Name contact 1', 'Position contact 1', 'Contact shooté 1', 'LinkedIn contact 1', 'Surname / Name contact 2', 'Position contact 2', 'Contact shooté 2', 'LinkedIn contact 2', 'Surname / Name contact 3', 'Position contact 3', 'Contact shooté 3', 'LinkedIn contact 3', 'Comments / Rationale (if passed)', 'Date of comments']]
-        st.dataframe(updated_df)
