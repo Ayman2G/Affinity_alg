@@ -332,7 +332,7 @@ st.sidebar.markdown("""
             text-align: center;
             margin-top: 100px;
             position: absolute;
-            bottom: -250px;
+            bottom: -300px;
             width: 100%;
         }
         .github-link a {
@@ -340,8 +340,8 @@ st.sidebar.markdown("""
             color: #0000EE;
         }
         .github-link img {
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
             vertical-align: middle;
         }
     </style>
