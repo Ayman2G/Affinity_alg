@@ -307,7 +307,7 @@ if export_file and notes_file and persons_file:
     with col1:
         st.button('View Generated Excel File', on_click=lambda: webbrowser.open(f'file://{output_path}'))
 
-    st.image("images/arrow_small_new.gif")
+    st.image("Gifs/arrow_small_new.gif")
 
     # If permission error, display the dataframe as a fallback option
     if st.session_state.get('permission_error', False):
