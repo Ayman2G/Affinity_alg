@@ -41,7 +41,8 @@ def populate_excel(ws, export_df, notes_df, persons_df):
         # Extract and add contacts data
         emails = get_emails(row['People'])
         for i, email in enumerate(emails):
-            person_data = persons_df[persons_df['Emails'].str.contains(email)]
+            # Ensure there are no NaN values before filtering
+            person_data = persons_df[persons_df['Emails'].fillna('').str.contains(email)]
             if not person_data.empty:
                 person = person_data.iloc[0]
                 ws.cell(row=start_row + index, column=9 + i * 4, value=person['Full Name'])  # Surname / name contact
@@ -285,44 +286,40 @@ if export_file and notes_file and persons_file:
             progress_text.text(f"Generating Excel file: {i + 1}%")
 
     # Populate the Excel file
-   # Function to extract relevant data and populate the Excel file
-def populate_excel(ws, export_df, notes_df, persons_df):
-    start_row = 22
+    populate_excel(ws, export_df, notes_df, persons_df)
 
-    # Add data from export_df
-    for index, row in export_df.iterrows():
-        acquirer_name = row['Name'].split(' - ')[1]
-        ws.cell(row=start_row + index, column=1, value=row['Wave/Tier'])  # Wave
-        ws.cell(row=start_row + index, column=2, value=acquirer_name)  # Acquirer's Name
-        ws.cell(row=start_row + index, column=4, value=row['Buyer Status'])  # Status
-        ws.cell(row=start_row + index, column=5, value=row['Introduction Call'])  # Introduction Call
-        ws.cell(row=start_row + index, column=6, value=row['Management Presentation'])  # Management Presentation
-        ws.cell(row=start_row + index, column=7, value=row['NDA Signed'])  # NDA Signed
+    # Save the updated Excel file to a BytesIO object
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
 
-        # Replace NaN values in the 'Emails' column with an empty string
-        persons_df['Emails'] = persons_df['Emails'].fillna('')
+    st.success("Data has been successfully populated into the Excel template.")
 
-        # Extract and add contacts data
-        emails = get_emails(row['People'])
-        for i, email in enumerate(emails):
-            person_data = persons_df[persons_df['Emails'].str.contains(email, na=False)]
-            if not person_data.empty:
-                person = person_data.iloc[0]
-                ws.cell(row=start_row + index, column=9 + i*4, value=person['Full Name'])  # Surname / name contact
-                ws.cell(row=start_row + index, column=10 + i*4, value=person['Job Titles'])  # Position
-                ws.cell(row=start_row + index, column=11 + i*4, value=person['Emails'])  # Email
-                ws.cell(row=start_row + index, column=12 + i*4, value=person['LinkedIn Url'])  # LinkedIn Url
+    st.markdown("### Generated Excel File Preview")
+    # Make row 19 the header and rows below as data
+    updated_df = pd.read_excel(output, sheet_name='Suivi du Roadshow', header=20)
+    updated_df = updated_df[['Wave', "Acquirer's Name", 'Status', 'Intro call', 'Tech call', 'NDA signed', 'Surname / Name contact 1', 'Position contact 1', 'Contact shooté 1', 'LinkedIn contact 1', 'Surname / Name contact 2', 'Position contact 2', 'Contact shooté 2', 'LinkedIn contact 2', 'Surname / Name contact 3', 'Position contact 3', 'Contact shooté 3', 'LinkedIn contact 3', 'Comments / Rationale (if passed)', 'Date of comments']]
+    st.dataframe(updated_df)
 
-    # Add data from notes_df
-    for index, row in notes_df.iterrows():
-        opportunity_name = row['Opportunity'].split(' - ')[1]
-        formatted_date = format_date(row['Author Date'])
-        for cell in ws['B']:  # Searching in the Acquirer's Name column
-            if cell.value == opportunity_name:
-                row_num = cell.row
-                ws.cell(row=row_num, column=21, value=row['Content'])  # Notes
-                ws.cell(row=row_num, column=22, value=formatted_date)  # Notes date
-                break
+    # Display buttons for viewing and downloading the generated file
+    col1, col2 = st.columns(2)
+    with col1:
+        st.download_button(
+            label="Download Generated Excel File",
+            data=output,
+            file_name=f'Generated_Roadshow_{dossier_name}.xlsx',
+            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+
+    st.image("Gifs/arrow_small_new.gif")
+
+    # If permission error, display the dataframe as a fallback option
+    if st.session_state.get('permission_error', False):
+        st.error("Permission denied: Unable to save or access the file. Please ensure the file is not open in another program and try again.")
+        st.info("You can view the generated file below:")
+        updated_df = pd.read_excel(output, sheet_name='Suivi du Roadshow', header=20)
+        updated_df = updated_df[['Wave', "Acquirer's Name", 'Status', 'Intro call', 'Tech call', 'NDA signed', 'Surname / Name contact 1', 'Position contact 1', 'Contact shooté 1', 'LinkedIn contact 1', 'Surname / Name contact 2', 'Position contact 2', 'Contact shooté 2', 'LinkedIn contact 2', 'Surname / Name contact 3', 'Position contact 3', 'Contact shooté 3', 'LinkedIn contact 3', 'Comments / Rationale (if passed)', 'Date of comments']]
+        st.dataframe(updated_df)
         
 st.sidebar.markdown("""
     <style>
