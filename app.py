@@ -14,7 +14,14 @@ def get_emails(people):
     if pd.isna(people):
         return []
     contacts = people.split(';')
-    emails = [contact.split('<')[1].replace('>', '').strip() for contact in contacts]
+    emails = []
+    for contact in contacts:
+        try:
+            email = contact.split('<')[1].replace('>', '').strip()
+            emails.append(email)
+        except IndexError:
+            # Handle cases where the expected format is not met
+            continue
     return emails[:3]  # Only consider the first three contacts
 
 # Function to format dates to a more user-friendly format
@@ -27,6 +34,17 @@ def format_date(date_str):
 # Function to extract relevant data and populate the Excel file
 def populate_excel(ws, export_df, notes_df, persons_df):
     start_row = 22
+
+    # Fill NaN values in relevant columns with empty strings or appropriate values
+    export_df['People'] = export_df['People'].fillna('')
+    export_df['Name'] = export_df['Name'].fillna('Unknown')
+    notes_df['Opportunity'] = notes_df['Opportunity'].fillna('Unknown')
+    notes_df['Author Date'] = notes_df['Author Date'].fillna('')
+    notes_df['Content'] = notes_df['Content'].fillna('')
+    persons_df['Emails'] = persons_df['Emails'].fillna('')
+    persons_df['Full Name'] = persons_df['Full Name'].fillna('Unknown')
+    persons_df['Job Titles'] = persons_df['Job Titles'].fillna('Unknown')
+    persons_df['LinkedIn Url'] = persons_df['LinkedIn Url'].fillna('')
 
     # Add data from export_df
     for index, row in export_df.iterrows():
@@ -41,8 +59,7 @@ def populate_excel(ws, export_df, notes_df, persons_df):
         # Extract and add contacts data
         emails = get_emails(row['People'])
         for i, email in enumerate(emails):
-            # Ensure there are no NaN values before filtering
-            person_data = persons_df[persons_df['Emails'].fillna('').str.contains(email)]
+            person_data = persons_df[persons_df['Emails'].str.contains(email)]
             if not person_data.empty:
                 person = person_data.iloc[0]
                 ws.cell(row=start_row + index, column=9 + i * 4, value=person['Full Name'])  # Surname / name contact
@@ -60,6 +77,7 @@ def populate_excel(ws, export_df, notes_df, persons_df):
                 ws.cell(row=row_num, column=21, value=row['Content'])  # Notes
                 ws.cell(row=row_num, column=22, value=formatted_date)  # Notes date
                 break
+
 
 # Function to determine the type of CSV file
 def determine_file_type(file):
